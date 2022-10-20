@@ -1,6 +1,7 @@
 //receive the success state as a prop
 //if success state is true than print the congrats message
 import React from "react";
+import PropTypes from "prop-types";
 
 export default function Congrats(props) {
   if (props.success) {
@@ -21,3 +22,6 @@ export default function Congrats(props) {
     );
   }
 }
+Congrats.propTypes = {
+  success: PropTypes.bool.isRequired,
+};
