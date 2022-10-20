@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function InputComponent({ secretWord }) {
-  const [currentGuess, setCurrentGuess] = React.useState("");
+  const [currentGuess, setCurrentGuess] = useState("");
   return (
     <div data-test="componentInput">
       <form className="formInline">
@@ -12,7 +12,15 @@ export default function InputComponent({ secretWord }) {
           value={currentGuess}
           onChange={(event) => setCurrentGuess(event.target.value)}
         />
-        <button data-test="submit-button">Submit</button>
+        <button
+          data-test="submitButton"
+          onClick={(evt) => {
+            evt.preventDefault();
+            setCurrentGuess("");
+          }}
+        >
+          Submit
+        </button>
       </form>
     </div>
   );

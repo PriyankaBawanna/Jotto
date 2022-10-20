@@ -7,6 +7,14 @@ const setup = () => {
   return shallow(<InputComponent />);
 };
 
+//this code for useState destructure
+const mockSetCurrentGuess = jest.fn();
+jest.mock("react", () => ({
+  ...jest.requireActual("react"),
+  // overwrite the useState Property , overwrite it with a function that takes an initial state
+  useState: (initialState) => [initialState, mockSetCurrentGuess],
+}));
+
 test("input renders without error", () => {
   const wrapper = setup();
   const inputComponent = findByTestAttribute(wrapper, "componentInput");
@@ -18,14 +26,23 @@ test("does not throw warning with expected props", () => {
 });
 
 describe("state controlled input filed", () => {
+  //way to use repeated code
+  let wrapper;
+  beforeEach(() => {
+    wrapper = setup();
+    mockSetCurrentGuess.mockClear(); //for not take old test result
+  });
+
   test("state updates with value of input box upon change  ", () => {
-    const mockSetCurrentGuess = jest.fn();
-    React.useState = jest.fn(() => ["", mockSetCurrentGuess]);
-    const wrapper = setup();
     const inputBox = findByTestAttribute(wrapper, "inputBox");
     const mockEvent = { target: { value: "Apple" } };
     inputBox.simulate("change", mockEvent);
 
     expect(mockSetCurrentGuess).toHaveBeenCalledWith("Apple");
+  });
+  test("field is cleared upon submits button click", () => {
+    const submitButton = findByTestAttribute(wrapper, "submitButton");
+    submitButton.simulate("click", { preventDefault() {} });
+    expect(mockSetCurrentGuess).toHaveBeenCalledWith("");
   });
 });
